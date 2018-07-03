@@ -1,7 +1,4 @@
 <?php declare(strict_types=1);
-/**
- * This file belongs to Bandit. All rights reserved
- */
 
 namespace AwsSecretsBundle\DependencyInjection;
 
@@ -14,7 +11,7 @@ use Symfony\Component\DependencyInjection\Reference;
 /**
  * Class AwsSecretsExtension
  * @package AwsSecretsBundle\DependencyInjection
- * @author  Joe Mizzi <themizzi@me.com>
+ * @author  Joe Mizzi <joe@casechek.com>
  *
  * @codeCoverageIgnore
  */
