@@ -33,7 +33,6 @@ class AwsSecretsExtension extends Extension
 
         $container->setParameter('aws_secrets.aws_region', $configs['aws_region']);
         $container->setParameter('aws_secrets.aws_version', $configs['aws_version']);
-        $container->setParameter('aws_secrets.store_prefix', $configs['store_prefix']);
         $container->setParameter('aws_secrets.ignore', $configs['ignore']);
         $container->setParameter('aws_secrets.aws_key', $configs['aws_key']);
         $container->setParameter('aws_secrets.aws_secret', $configs['aws_secret']);

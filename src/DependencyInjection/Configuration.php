@@ -30,7 +30,6 @@ class Configuration implements ConfigurationInterface
         $rootNode->children()
             ->scalarNode('aws_region')->end()
             ->scalarNode('aws_version')->defaultValue('latest')->end()
-            ->scalarNode('store_prefix')->end()
             ->booleanNode('ignore')->defaultFalse()->end()
             ->scalarNode('aws_key')->end()
             ->scalarNode('aws_secret')->end()

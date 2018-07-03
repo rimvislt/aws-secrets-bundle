@@ -65,7 +65,6 @@ class Kernel extends BaseKernel
     ): void {
         $c->loadFromExtension('aws_secrets', [
             'aws_region' => 'region',
-            'store_prefix' => 'prefix/',
             'aws_key' => 'key',
             'aws_secret' => 'secret'
         ]);
