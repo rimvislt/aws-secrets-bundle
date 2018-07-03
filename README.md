@@ -2,6 +2,8 @@
 
 Easy loading of AWS Secrets Manager Secrets for Symfony
 
+[![Build Status](https://travis-ci.org/incompass/aws-secrets-bundle.svg?branch=master)](https://travis-ci.org/incompass/aws-secrets-bundle)
+
 ## Installation
 
     $ composer require incompass/aws-secrets-bundle
