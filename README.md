@@ -1,4 +1,4 @@
-
+:
 
 # AWS Secrets Bundle
 
@@ -8,7 +8,7 @@ Easy loading of AWS Secrets Manager Secrets for Symfony
 
 ## Installation
 
-    $ composer require incompass/aws-secrets-bundle
+    $ composer require incompass/aws-secrets-bundle:"dev-master"
 
 ## Configuration
 
