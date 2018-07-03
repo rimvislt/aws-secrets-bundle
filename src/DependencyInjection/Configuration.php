@@ -25,12 +25,12 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('aws_secrets');
 
         $rootNode->children()
-            ->scalarNode('aws_region')->end()
+            ->scalarNode('aws_region')->defaultNull()->end()
             ->scalarNode('aws_version')->defaultValue('latest')->end()
-            ->booleanNode('ignore')->defaultFalse()->end()
-            ->scalarNode('aws_key')->end()
-            ->scalarNode('aws_secret')->end()
-            ->scalarNode('delimiter')->defaultValue(',')->end();
+            ->scalarNode('aws_key')->defaultNull()->end()
+            ->scalarNode('aws_secret')->defaultNull()->end()
+            ->scalarNode('delimiter')->defaultValue(',')->end()
+            ->booleanNode('ignore')->defaultFalse()->end();
 
         return $treeBuilder;
     }
