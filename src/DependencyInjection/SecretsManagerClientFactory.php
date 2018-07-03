@@ -9,6 +9,8 @@ use Symfony\Component\DependencyInjection\Exception\RuntimeException;
  * Class SecretsManagerFactory
  * @package AwsSecretsBundle\DependencyInjection
  * @author  Joe Mizzi <joe@casechek.com>
+ *
+ * @codeCoverageIgnore
  */
 class SecretsManagerClientFactory
 {
