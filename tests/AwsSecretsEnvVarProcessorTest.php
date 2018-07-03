@@ -35,16 +35,6 @@ class AwsSecretsEnvVarProcessorTest extends TestCase
     /**
      * @test
      */
-    public function it_throws_exception_if_not_two_parts(): void
-    {
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('AWS Env Var should have two parts');
-        $this->processor->getEnv('aws', 'AWS_SECRET', function (string $name) { return 'one-part'; });
-    }
-
-    /**
-     * @test
-     */
     public function it_calls_closure_if_ignored(): void
     {
         $this->processor = new AwsSecretsEnvVarProcessor(
@@ -64,7 +54,7 @@ class AwsSecretsEnvVarProcessorTest extends TestCase
     /**
      * @test
      */
-    public function it_returns_string(): void
+    public function it_returns_string_for_key(): void
     {
         $this->secretsManagerClient->getSecretValue(
             [
@@ -82,7 +72,47 @@ class AwsSecretsEnvVarProcessorTest extends TestCase
             )
         );
 
-        $value = $this->processor->getEnv('aws', 'AWS_SECRET', function (string $name) { return 'prefix/db,key'; });
+        $value = $this->processor->getEnv(
+            'aws',
+            'AWS_SECRET',
+            function (string $name) {
+                return 'prefix/db,key';
+            }
+        );
         $this->assertEquals('value', $value);
+    }
+
+    /**
+     * @test
+     */
+    public function it_returns_string(): void
+    {
+        $json = json_encode(
+            [
+                'key' => 'value',
+            ]
+        );
+
+        $this->secretsManagerClient->getSecretValue(
+            [
+                AwsSecretsEnvVarProcessor::AWS_SECRET_ID => 'prefix/db',
+            ]
+        )->willReturn(
+            new Result(
+                [
+                    AwsSecretsEnvVarProcessor::AWS_SECRET_STRING => $json,
+                ]
+            )
+        );
+
+        $value = $this->processor->getEnv(
+            'aws',
+            'AWS_SECRET',
+            function (string $name) {
+                return 'prefix/db';
+            }
+        );
+
+        $this->assertEquals($json, $value);
     }
 }

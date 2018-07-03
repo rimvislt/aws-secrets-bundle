@@ -23,6 +23,7 @@ class AwsSecretsEnvVarProcessor implements EnvVarProcessorInterface
     private $delimiter;
     private $ignore;
     private $secrets = [];
+    private $decodedSecrets = [];
 
     public function __construct(
         SecretsManagerClient $secretsManagerClient,
@@ -50,22 +51,22 @@ class AwsSecretsEnvVarProcessor implements EnvVarProcessorInterface
         if (!$this->ignore) {
             $parts = explode($this->delimiter, $getEnv($name));
 
-            if (\count($parts) !== 2) {
-                throw new RuntimeException('AWS Env Var should have two parts');
-            }
-
             if (!isset($this->secrets[$parts[0]])) {
-                $this->secrets[$parts[0]] = json_decode(
+                $this->secrets[$parts[0]] =
                     $this->secretsManagerClient
                         ->getSecretValue([self::AWS_SECRET_ID => $parts[0]])
-                        ->get(self::AWS_SECRET_STRING),
-                    true
-                );
+                        ->get(self::AWS_SECRET_STRING);
             }
 
-            return (string)$this->secrets[$parts[0]][$parts[1]];
-        }
+            if (isset($parts[1])) {
+                if (!isset($this->decodedSecrets[$parts[0]])) {
+                    $this->decodedSecrets[$parts[0]] = json_decode($this->secrets[$parts[0]], true);
+                }
+                return (string)$this->decodedSecrets[$parts[0]][$parts[1]];
+            }
 
+            return $this->secrets[$parts[0]];
+        }
 
         return $getEnv($name);
     }
