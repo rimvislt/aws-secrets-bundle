@@ -30,7 +30,7 @@ class Configuration implements ConfigurationInterface
             ->scalarNode('aws_key')->defaultNull()->end()
             ->scalarNode('aws_secret')->defaultNull()->end()
             ->scalarNode('delimiter')->defaultValue(',')->end()
-            ->booleanNode('ignore')->defaultFalse()->end();
+            ->scalarNode('ignore')->defaultFalse()->end();
 
         return $treeBuilder;
     }
