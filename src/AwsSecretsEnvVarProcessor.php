@@ -18,18 +18,15 @@ class AwsSecretsEnvVarProcessor implements EnvVarProcessorInterface
 
     private $secretsManagerClient;
     private $delimiter;
-    private $ignore;
     private $secrets = [];
     private $decodedSecrets = [];
 
     public function __construct(
-        SecretsManagerClient $secretsManagerClient,
-        string $delimiter = ',',
-        bool $ignore = false
+        ?SecretsManagerClient $secretsManagerClient,
+        string $delimiter = ','
     ) {
         $this->secretsManagerClient = $secretsManagerClient;
         $this->delimiter = $delimiter;
-        $this->ignore = $ignore;
     }
 
     /**
@@ -45,7 +42,7 @@ class AwsSecretsEnvVarProcessor implements EnvVarProcessorInterface
      */
     public function getEnv($prefix, $name, \Closure $getEnv)
     {
-        if (!$this->ignore) {
+        if ($this->secretsManagerClient !== null) {
             $parts = explode($this->delimiter, $getEnv($name));
 
             if (!isset($this->secrets[$parts[0]])) {

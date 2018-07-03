@@ -35,12 +35,11 @@ class AwsSecretsEnvVarProcessorTest extends TestCase
     /**
      * @test
      */
-    public function it_calls_closure_if_ignored(): void
+    public function it_calls_closure_if_no_processor(): void
     {
         $this->processor = new AwsSecretsEnvVarProcessor(
-            $this->secretsManagerClient->reveal(),
-            ',',
-            true
+            null,
+            ','
         );
         $this->processor->getEnv(
             'aws',
