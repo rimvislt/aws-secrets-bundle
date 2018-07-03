@@ -1,3 +1,5 @@
+
+
 # AWS Secrets Bundle
 
 Easy loading of AWS Secrets Manager Secrets for Symfony
@@ -26,6 +28,10 @@ Set an env var to an AWS Secret Manager Secret name like so:
 
     AWS_SECRET=secret_name
 
+If you want to grab a key in a JSON secret, you can seperate the secret name and key:
+
+    AWS_SECRET=secret_name,key
+    
 Set a parameter to this environment variable with the aws processor:
 
 ```yaml
