@@ -12,38 +12,30 @@ use Symfony\Component\DependencyInjection\Exception\RuntimeException;
  */
 class SecretsManagerClientFactory
 {
-    private $awsRegion;
-    private $awsVersion;
-    private $awsKey;
-    private $awsSecret;
-    private $ignore;
-
-    public function __construct(?string $awsRegion, ?string $awsVersion, ?string $awsKey, ?string $awsSecret, bool $ignore = false)
-    {
-        $this->awsRegion = $awsRegion;
-        $this->awsVersion = $awsVersion;
-        $this->awsKey = $awsKey;
-        $this->awsSecret = $awsSecret;
-        $this->ignore = $ignore;
-    }
-
-    public function createSecretsManagerClient(): ?SecretsManagerClient
-    {
-        if ($this->ignore) {
+    public static function createSecretsManagerClient(
+        ?string $awsRegion,
+        ?string $awsVersion,
+        ?string $awsKey,
+        ?string $awsSecret,
+        bool $ignore = false
+    ): ?SecretsManagerClient {
+        if ($ignore) {
             return null;
         }
 
-        if ($this->awsRegion === null || $this->awsVersion === null || $this->awsKey === null || $this->awsSecret === null) {
+        if ($awsRegion === null || $awsVersion === null || $awsKey === null || $awsSecret === null) {
             throw new RuntimeException('AWS Credentials required if aws env vars not ignored');
         }
 
-        return new SecretsManagerClient([
-            'region' => $this->awsRegion,
-            'version' => $this->awsVersion,
-            'credentials' => [
-                'key' => $this->awsKey,
-                'secret' => $this->awsSecret,
-            ],
-        ]);
+        return new SecretsManagerClient(
+            [
+                'region' => $awsRegion,
+                'version' => $awsVersion,
+                'credentials' => [
+                    'key' => $awsKey,
+                    'secret' => $awsSecret,
+                ],
+            ]
+        );
     }
 }
