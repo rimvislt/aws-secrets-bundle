@@ -16,14 +16,14 @@
     ],
     "require": {
         "php": ">=7.1",
-        "symfony/dependency-injection": "^3.4 | ^4.1",
+        "symfony/dependency-injection": "^3.4.12 | ^4.0",
         "aws/aws-sdk-php": "^3.62"
     },
     "require-dev": {
         "roave/security-advisories": "dev-master",
-        "symfony/framework-bundle": "^3.4 | ^4.1",
+        "symfony/framework-bundle": "^3.4 | ^4.0",
         "phpunit/phpunit": "^7.2",
-        "symfony/phpunit-bridge": "^3.4 | ^4.1",
+        "symfony/phpunit-bridge": "^3.4 | ^4.0",
         "behat/symfony2-extension": "^2.1"
     },
     "autoload": {

@@ -48,7 +48,7 @@ class AwsSecretsExtension extends Extension
                         'secret' => '%aws_secrets.aws_secret%',
                     ],
                 ]
-            );
+            )->setPublic(false);
 
         $container->setAlias('aws_secrets.client', 'aws_secrets.secrets_manager_client')
             ->setPublic(true);
