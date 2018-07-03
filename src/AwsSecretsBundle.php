@@ -1,7 +1,4 @@
 <?php declare(strict_types=1);
-/**
- * This file belongs to Bandit. All rights reserved
- */
 
 namespace AwsSecretsBundle;
 
