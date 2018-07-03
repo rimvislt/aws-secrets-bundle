@@ -1,5 +1,3 @@
-:
-
 # AWS Secrets Bundle
 
 Easy loading of AWS Secrets Manager Secrets for Symfony
