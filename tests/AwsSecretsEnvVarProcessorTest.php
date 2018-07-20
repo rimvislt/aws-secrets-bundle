@@ -138,6 +138,9 @@ class AwsSecretsEnvVarProcessorTest extends TestCase
                 if ($callCount === 1) {
                     return 'prefix/db';
                 }
+                if ($callCount === 2) {
+                    $this->assertEquals('AWS_SECRET', $name);
+                }
             }
         );
 

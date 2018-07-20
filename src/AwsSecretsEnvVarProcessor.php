@@ -65,7 +65,7 @@ class AwsSecretsEnvVarProcessor implements EnvVarProcessorInterface
             return $this->secrets[$parts[0]];
         }
 
-        return $getEnv($value);
+        return $getEnv($name);
     }
 
     /**
