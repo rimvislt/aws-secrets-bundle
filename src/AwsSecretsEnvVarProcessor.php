@@ -42,9 +42,12 @@ class AwsSecretsEnvVarProcessor implements EnvVarProcessorInterface
      */
     public function getEnv($prefix, $name, \Closure $getEnv)
     {
-        if ($this->secretsManagerClient !== null) {
-            $parts = explode($this->delimiter, $getEnv($name));
+        $value = $getEnv($name);
 
+        if ($this->secretsManagerClient !== null
+            && $value !== null
+        ) {
+            $parts = explode($this->delimiter, $value);
             if (!isset($this->secrets[$parts[0]])) {
                 $this->secrets[$parts[0]] =
                     $this->secretsManagerClient
@@ -62,7 +65,7 @@ class AwsSecretsEnvVarProcessor implements EnvVarProcessorInterface
             return $this->secrets[$parts[0]];
         }
 
-        return $getEnv($name);
+        return $getEnv($value);
     }
 
     /**

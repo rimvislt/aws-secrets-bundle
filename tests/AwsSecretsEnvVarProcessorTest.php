@@ -41,13 +41,32 @@ class AwsSecretsEnvVarProcessorTest extends TestCase
             null,
             ','
         );
+        $callCount = 0;
         $this->processor->getEnv(
             'aws',
             'AWS_SECRET',
-            function (string $name) {
-                $this->assertEquals('AWS_SECRET', $name);
+            function ($name) use (&$callCount) {
+                $callCount++;
             }
         );
+        $this->assertEquals(2, $callCount);
+    }
+
+    /**
+     * @test
+     */
+    public function it_calls_closure_if_null(): void
+    {
+        $callCount = 0;
+        $this->processor->getEnv(
+            'aws',
+            'AWS_SECRET',
+            function ($name) use (&$callCount) {
+                $callCount++;
+                return null;
+            }
+        );
+        $this->assertEquals(2, $callCount);
     }
 
     /**
@@ -71,11 +90,17 @@ class AwsSecretsEnvVarProcessorTest extends TestCase
             )
         );
 
+        $callCount = 0;
         $value = $this->processor->getEnv(
             'aws',
             'AWS_SECRET',
-            function (string $name) {
-                return 'prefix/db,key';
+            function (string $name) use (&$callCount) {
+                $callCount++;
+                if ($callCount === 1) {
+                    return 'prefix/db,key';
+                } else {
+                    return 'value';
+                }
             }
         );
         $this->assertEquals('value', $value);
@@ -104,11 +129,15 @@ class AwsSecretsEnvVarProcessorTest extends TestCase
             )
         );
 
+        $callCount = 0;
         $value = $this->processor->getEnv(
             'aws',
             'AWS_SECRET',
-            function (string $name) {
-                return 'prefix/db';
+            function (string $name) use (&$callCount) {
+                $callCount++;
+                if ($callCount === 1) {
+                    return 'prefix/db';
+                }
             }
         );
 
