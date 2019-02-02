@@ -66,7 +66,7 @@ class AwsSecretsExtension extends Extension
             ->setArgument('$ttl', $container->getParameter('aws_secrets.ttl'));
 
         $container->register('aws_secrets.env_var_array_provider', AwsSecretsArrayEnvVarProvider::class)
-            ->setArgument('$decorated', new Reference('aw_secrets.env_var_cached_provider'));
+            ->setArgument('$decorated', new Reference('aws_secrets.env_var_cached_provider'));
 
         $container->register('aws_secrets.env_var_processor', AwsSecretsEnvVarProcessor::class)
             ->setArgument('$provider', new Reference('aws_secrets.env_var_array_provider'))
