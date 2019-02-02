@@ -45,7 +45,7 @@ class AwsSecretsEnvVarProcessor implements EnvVarProcessorInterface
     public function getEnv($prefix, $name, \Closure $getEnv)
     {
         if ($this->ignore === true) {
-            return $getEnv($prefix, $name);
+            return $getEnv($name);
         }
 
         $value = $getEnv($name);
