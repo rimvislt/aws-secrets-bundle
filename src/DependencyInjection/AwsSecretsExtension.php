@@ -33,7 +33,7 @@ class AwsSecretsExtension extends Extension
         $configuration = new Configuration();
         $configs = $this->processConfiguration($configuration, $configs);
 
-        $container->setParameter('aws_secrets.ttl', $configs['tt']);
+        $container->setParameter('aws_secrets.ttl', $configs['ttl']);
         $container->setParameter('aws_secrets.ignore', $configs['ignore']);
         $container->setParameter('aws_secrets.delimiter', $configs['delimiter']);
 
