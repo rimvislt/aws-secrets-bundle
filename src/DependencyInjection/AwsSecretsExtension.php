@@ -8,8 +8,10 @@ use AwsSecretsBundle\Command\AwsSecretValueCommand;
 use AwsSecretsBundle\Provider\AwsSecretsArrayEnvVarProvider;
 use AwsSecretsBundle\Provider\AwsSecretsCachedEnvVarProvider;
 use AwsSecretsBundle\Provider\AwsSecretsEnvVarProvider;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Reference;
 
@@ -51,7 +53,7 @@ class AwsSecretsExtension extends Extension
         } elseif ($configs['cache'] === 'filesystem') {
             $definition = new ChildDefinition('cache.adapter.filesystem');
         } else {
-            $definition = new ChildDefinition('cache.adapter.array');
+            $definition = new Definition(ArrayAdapter::class);
         }
 
         $definition->addTag('cache.pool');
