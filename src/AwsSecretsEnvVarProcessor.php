@@ -44,11 +44,11 @@ class AwsSecretsEnvVarProcessor implements EnvVarProcessorInterface
      */
     public function getEnv($prefix, $name, \Closure $getEnv)
     {
-        $value = $getEnv($name);
-
-        if ($this->ignore === true || $value === null) {
-            return $getEnv($value);
+        if ($this->ignore === true) {
+            return $getEnv($prefix, $name);
         }
+
+        $value = $getEnv($name);
 
         $parts = explode($this->delimiter, $value);
         $result = $this->provider->get($parts[0]);

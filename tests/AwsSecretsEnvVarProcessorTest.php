@@ -38,12 +38,12 @@ class AwsSecretsEnvVarProcessorTest extends TestCase
     /**
      * @test
      */
-    public function it_calls_closure_if_no_processor(): void
+    public function it_calls_closure_if_ignore(): void
     {
         $this->processor->setIgnore(true);
 
         $callCount = 0;
-        $this->processor->getEnv(
+        $result = $this->processor->getEnv(
             'aws',
             'AWS_SECRET',
             function ($name) use (&$callCount) {
@@ -51,24 +51,8 @@ class AwsSecretsEnvVarProcessorTest extends TestCase
                 return 'value';
             }
         );
-        $this->assertEquals(2, $callCount);
-    }
-
-    /**
-     * @test
-     */
-    public function it_calls_closure_if_null(): void
-    {
-        $callCount = 0;
-        $this->processor->getEnv(
-            'aws',
-            'AWS_SECRET',
-            function ($name) use (&$callCount) {
-                $callCount++;
-                return null;
-            }
-        );
-        $this->assertEquals(2, $callCount);
+        $this->assertEquals(1, $callCount);
+        $this->assertEquals('value', $result);
     }
 
     /**
