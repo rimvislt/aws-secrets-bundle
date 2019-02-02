@@ -3,7 +3,6 @@
 namespace AwsSecretsBundle\DependencyInjection;
 
 use Aws\SecretsManager\SecretsManagerClient;
-use Symfony\Component\DependencyInjection\Exception\RuntimeException;
 
 /**
  * Class SecretsManagerFactory
@@ -15,29 +14,13 @@ use Symfony\Component\DependencyInjection\Exception\RuntimeException;
 class SecretsManagerClientFactory
 {
     public static function createSecretsManagerClient(
-        ?string $awsRegion,
-        ?string $awsVersion,
-        ?string $awsKey,
-        ?string $awsSecret,
+        ?array $clientConfig,
         bool $ignore = false
     ): ?SecretsManagerClient {
         if ($ignore) {
             return null;
         }
 
-        if ($awsRegion === null || $awsVersion === null || $awsKey === null || $awsSecret === null) {
-            throw new RuntimeException('AWS Credentials required if aws env vars not ignored');
-        }
-
-        return new SecretsManagerClient(
-            [
-                'region' => $awsRegion,
-                'version' => $awsVersion,
-                'credentials' => [
-                    'key' => $awsKey,
-                    'secret' => $awsSecret,
-                ],
-            ]
-        );
+        return new SecretsManagerClient($clientConfig);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace AwsSecretsBundle;
 
-use Aws\SecretsManager\SecretsManagerClient;
+use AwsSecretsBundle\Provider\AwsSecretsEnvVarProviderInterface;
 use Symfony\Component\DependencyInjection\EnvVarProcessorInterface;
 use Symfony\Component\DependencyInjection\Exception\RuntimeException;
 
@@ -16,17 +16,19 @@ class AwsSecretsEnvVarProcessor implements EnvVarProcessorInterface
     public const AWS_SECRET_ID = 'SecretId';
     public const AWS_SECRET_STRING = 'SecretString';
 
-    private $secretsManagerClient;
     private $delimiter;
-    private $secrets = [];
     private $decodedSecrets = [];
+    private $ignore;
+    private $provider;
 
     public function __construct(
-        ?SecretsManagerClient $secretsManagerClient,
+        AwsSecretsEnvVarProviderInterface $provider,
+        bool $ignore = false,
         string $delimiter = ','
     ) {
-        $this->secretsManagerClient = $secretsManagerClient;
+        $this->ignore = $ignore;
         $this->delimiter = $delimiter;
+        $this->provider = $provider;
     }
 
     /**
@@ -44,28 +46,27 @@ class AwsSecretsEnvVarProcessor implements EnvVarProcessorInterface
     {
         $value = $getEnv($name);
 
-        if ($this->secretsManagerClient !== null
-            && $value !== null
-        ) {
-            $parts = explode($this->delimiter, $value);
-            if (!isset($this->secrets[$parts[0]])) {
-                $this->secrets[$parts[0]] =
-                    $this->secretsManagerClient
-                        ->getSecretValue([self::AWS_SECRET_ID => $parts[0]])
-                        ->get(self::AWS_SECRET_STRING);
-            }
-
-            if (isset($parts[1])) {
-                if (!isset($this->decodedSecrets[$parts[0]])) {
-                    $this->decodedSecrets[$parts[0]] = json_decode($this->secrets[$parts[0]], true);
-                }
-                return (string)$this->decodedSecrets[$parts[0]][$parts[1]];
-            }
-
-            return $this->secrets[$parts[0]];
+        if ($this->ignore === true || $value === null) {
+            return $getEnv($value);
         }
 
-        return $getEnv($name);
+        $parts = explode($this->delimiter, $value);
+        $result = $this->provider->get($parts[0]);
+
+        if (isset($parts[1])) {
+            if (!isset($this->decodedSecrets[$parts[0]])) {
+                $this->decodedSecrets[$parts[0]] = json_decode($result, true);
+            }
+
+            return (string)$this->decodedSecrets[$parts[0]][$parts[1]];
+        }
+
+        return $result;
+    }
+
+    public function setIgnore(bool $ignore): void
+    {
+        $this->ignore = $ignore;
     }
 
     /**
