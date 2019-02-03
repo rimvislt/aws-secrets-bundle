@@ -25,10 +25,21 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('aws_secrets');
 
         $rootNode->children()
-            ->scalarNode('aws_region')->defaultNull()->end()
-            ->scalarNode('aws_version')->defaultValue('latest')->end()
-            ->scalarNode('aws_key')->defaultNull()->end()
-            ->scalarNode('aws_secret')->defaultNull()->end()
+            ->arrayNode('client_config')
+                ->addDefaultsIfNotSet()
+                ->children()
+                    ->scalarNode('region')->defaultNull()->end()
+                    ->scalarNode('version')->defaultValue('latest')->end()
+                    ->arrayNode('credentials')
+                        ->children()
+                            ->scalarNode('key')->defaultNull()->end()
+                            ->scalarNode('secret')->defaultNull()->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
+            ->enumNode('cache')->values(['apcu', 'filesystem', 'array'])->defaultValue('array')->end()
+            ->scalarNode('ttl')->defaultValue(60)->end()
             ->scalarNode('delimiter')->defaultValue(',')->end()
             ->scalarNode('ignore')->defaultFalse()->end();
 

@@ -12,12 +12,15 @@ Easy loading of AWS Secrets Manager Secrets for Symfony
 
 ```yaml
 aws_secrets:
-  aws_region: ~
-  aws_version: ~
-  aws_key: ~
-  aws_secret: ~
-  delimiter: ','    # delimiter to separate key from secret name
-  ignore: false     # pass through aws (for local dev environments set to true)
+  client_config:
+    region:           # required if ignore is false
+    version: 'latest' # defaults to latest
+    credentials: 
+        key: ~
+        secret: ~
+  cache: 'array'      # one of apcu, array, filesystem, default is array
+  delimiter: ','      # delimiter to separate key from secret name
+  ignore: false       # pass through aws (for local dev environments set to true)
 ```
 
 ## Usage

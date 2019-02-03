@@ -63,10 +63,18 @@ class Kernel extends BaseKernel
         \Symfony\Component\DependencyInjection\ContainerBuilder $c,
         \Symfony\Component\Config\Loader\LoaderInterface $loader
     ): void {
+        $c->loadFromExtension('framework', [
+            'cache' => true
+        ]);
+
         $c->loadFromExtension('aws_secrets', [
-            'aws_region' => 'region',
-            'aws_key' => 'key',
-            'aws_secret' => 'secret'
+            'client_config' => [
+                'region' => 'region',
+                'credentials' => [
+                    'key' => 'key',
+                    'secret' => 'secret'
+                ]
+            ]
         ]);
 
         $c->setParameter('kernel.secret', 'S3CR3T');
