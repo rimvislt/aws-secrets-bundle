@@ -77,10 +77,5 @@ class AwsSecretsExtension extends Extension
             ->setArgument('$delimiter', $container->getParameter('aws_secrets.delimiter'))
             ->setPublic(false)
             ->addTag('container.env_var_processor');
-
-        $container->register('aws_secrets.secret_value.command', AwsSecretValueCommand::class)
-            ->setArgument('$secretsManagerClient', new Reference('aws_secrets.client'))
-            ->setPublic(false)
-            ->addTag('console.command');
     }
 }
