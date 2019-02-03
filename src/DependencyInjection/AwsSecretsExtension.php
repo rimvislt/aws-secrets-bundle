@@ -58,24 +58,29 @@ class AwsSecretsExtension extends Extension
         $container->setDefinition('aws_secrets.cache', $definition);
 
         $container->register('aws_secrets.env_var_provider', AwsSecretsEnvVarProvider::class)
-            ->setArgument('$secretsManagerClient', new Reference('aws_secrets.client'));
+            ->setArgument('$secretsManagerClient', new Reference('aws_secrets.client'))
+            ->setPublic(false);
 
         $container->register('aws_secrets.env_var_cached_provider', AwsSecretsCachedEnvVarProvider::class)
             ->setArgument('$cacheItemPool', new Reference('aws_secrets.cache'))
             ->setArgument('$decorated', new Reference('aws_secrets.env_var_provider'))
-            ->setArgument('$ttl', $container->getParameter('aws_secrets.ttl'));
+            ->setArgument('$ttl', $container->getParameter('aws_secrets.ttl'))
+            ->setPublic(false);
 
         $container->register('aws_secrets.env_var_array_provider', AwsSecretsArrayEnvVarProvider::class)
-            ->setArgument('$decorated', new Reference('aws_secrets.env_var_cached_provider'));
+            ->setArgument('$decorated', new Reference('aws_secrets.env_var_cached_provider'))
+            ->setPublic(false);
 
         $container->register('aws_secrets.env_var_processor', AwsSecretsEnvVarProcessor::class)
             ->setArgument('$provider', new Reference('aws_secrets.env_var_array_provider'))
             ->setArgument('$ignore', $container->getParameter('aws_secrets.ignore'))
             ->setArgument('$delimiter', $container->getParameter('aws_secrets.delimiter'))
+            ->setPublic(false)
             ->addTag('container.env_var_processor');
 
         $container->register('aws_secrets.secret_value.command', AwsSecretValueCommand::class)
             ->setArgument('$secretsManagerClient', new Reference('aws_secrets.client'))
+            ->setPublic(false)
             ->addTag('console.command');
     }
 }
