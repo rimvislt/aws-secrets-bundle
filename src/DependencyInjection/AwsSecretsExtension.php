@@ -39,6 +39,13 @@ class AwsSecretsExtension extends Extension
         $container->setParameter('aws_secrets.ignore', $configs['ignore']);
         $container->setParameter('aws_secrets.delimiter', $configs['delimiter']);
 
+        if (
+            $configs['client_config']['credentials']['key'] === null ||
+            $configs['client_config']['credentials']['secret'] === null
+        ) {
+            unset($configs['client_config']['credentials']);
+        }
+
         $container->register('aws_secrets.secrets_manager_client', SecretsManagerClient::class)
             ->setLazy(true)
             ->addArgument($configs['client_config'])
