@@ -9,6 +9,7 @@ use AwsSecretsBundle\Command\AwsSecretValueCommand;
 use AwsSecretsBundle\Provider\AwsSecretsArrayEnvVarProvider;
 use AwsSecretsBundle\Provider\AwsSecretsCachedEnvVarProvider;
 use AwsSecretsBundle\Provider\AwsSecretsEnvVarProvider;
+use Opis\Closure\SerializableClosure;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -53,7 +54,7 @@ class AwsSecretsExtension extends Extension
         if ($configs['ecs_enabled']) {
             $provider = CredentialProvider::ecsCredentials();
             $memoizedProvider = CredentialProvider::memoize($provider);
-            $configs['client_config']['credentials'] = $memoizedProvider;
+            $configs['client_config']['credentials'] = new SerializableClosure($memoizedProvider);
         }
 
         $container->register('aws_secrets.secrets_manager_client', SecretsManagerClient::class)

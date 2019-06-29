@@ -18,7 +18,8 @@
         "php": ">=7.1",
         "symfony/dependency-injection": "^3.4 | ^4.0",
         "aws/aws-sdk-php": "^3.62",
-        "ext-json": "*"
+        "ext-json": "*",
+        "opis/closure": "^3.3"
     },
     "require-dev": {
         "roave/security-advisories": "dev-master",
