@@ -44,7 +44,10 @@ class AwsSecretsExtension extends Extension
             $configs['client_config']['credentials']['key'] === null ||
             $configs['client_config']['credentials']['secret'] === null
         ) {
-            unset($configs['client_config']['credentials']);
+            unset(
+                $configs['client_config']['credentials']['key'],
+                $configs['client_config']['credentials']['secret']
+            );
         }
 
         if ($configs['ecs_enabled']) {
