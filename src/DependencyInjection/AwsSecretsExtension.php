@@ -2,6 +2,7 @@
 
 namespace AwsSecretsBundle\DependencyInjection;
 
+use Aws\Credentials\CredentialProvider;
 use Aws\SecretsManager\SecretsManagerClient;
 use AwsSecretsBundle\AwsSecretsEnvVarProcessor;
 use AwsSecretsBundle\Command\AwsSecretValueCommand;
@@ -44,6 +45,10 @@ class AwsSecretsExtension extends Extension
             $configs['client_config']['credentials']['secret'] === null
         ) {
             unset($configs['client_config']['credentials']);
+        }
+
+        if ($configs['ecs_enabled']) {
+            $configs['client_config']['credentials'] = CredentialProvider::ecsCredentials();
         }
 
         $container->register('aws_secrets.secrets_manager_client', SecretsManagerClient::class)
