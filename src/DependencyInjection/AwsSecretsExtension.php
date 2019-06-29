@@ -51,7 +51,9 @@ class AwsSecretsExtension extends Extension
         }
 
         if ($configs['ecs_enabled']) {
-            $configs['client_config']['credentials'] = CredentialProvider::ecsCredentials();
+            $provider = CredentialProvider::ecsCredentials();
+            $memoizedProvider = CredentialProvider::memoize($provider);
+            $configs['client_config']['credentials'] = $memoizedProvider;
         }
 
         $container->register('aws_secrets.secrets_manager_client', SecretsManagerClient::class)
