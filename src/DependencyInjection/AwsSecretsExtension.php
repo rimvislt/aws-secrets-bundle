@@ -2,14 +2,11 @@
 
 namespace AwsSecretsBundle\DependencyInjection;
 
-use Aws\Credentials\CredentialProvider;
 use Aws\SecretsManager\SecretsManagerClient;
 use AwsSecretsBundle\AwsSecretsEnvVarProcessor;
-use AwsSecretsBundle\Command\AwsSecretValueCommand;
 use AwsSecretsBundle\Provider\AwsSecretsArrayEnvVarProvider;
 use AwsSecretsBundle\Provider\AwsSecretsCachedEnvVarProvider;
 use AwsSecretsBundle\Provider\AwsSecretsEnvVarProvider;
-use Opis\Closure\SerializableClosure;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -41,26 +38,11 @@ class AwsSecretsExtension extends Extension
         $container->setParameter('aws_secrets.ignore', $configs['ignore']);
         $container->setParameter('aws_secrets.delimiter', $configs['delimiter']);
 
-        if (
-            $configs['client_config']['credentials']['key'] === null ||
-            $configs['client_config']['credentials']['secret'] === null
-        ) {
-            unset(
-                $configs['client_config']['credentials']['key'],
-                $configs['client_config']['credentials']['secret']
-            );
-        }
-
-        if ($configs['ecs_enabled']) {
-            $provider = CredentialProvider::ecsCredentials();
-            $memoizedProvider = CredentialProvider::memoize($provider);
-            $configs['client_config']['credentials'] = new SerializableClosure($memoizedProvider);
-        }
-
         $container->register('aws_secrets.secrets_manager_client', SecretsManagerClient::class)
             ->setLazy(true)
+            ->setPublic(false)
             ->addArgument($configs['client_config'])
-            ->setPublic(false);
+            ->setFactory([SecretsManagerClientFactory::class, 'createClient']);
 
         $container->setAlias('aws_secrets.client', 'aws_secrets.secrets_manager_client')
             ->setPublic(true);
