@@ -18,24 +18,19 @@ class SecretsManagerClientFactory
      * @param array $config
      * @return SecretsManagerClient
      */
-    public function createClient(array $config): SecretsManagerClient
+    public function createClient(array $credentialsConfig, bool $ecsEnabled): SecretsManagerClient
     {
-        if (
-            $config['credentials']['key'] === null ||
-            $config['credentials']['secret'] === null
-        ) {
+        if (!$ecsEnabled) {
             unset(
-                $config['credentials']['key'],
-                $config['credentials']['secret']
+                $credentialsConfig['credentials']['key'],
+                $credentialsConfig['credentials']['secret']
             );
-        }
-
-        if ($config['ecs_enabled']) {
+        } else {
             $provider = CredentialProvider::ecsCredentials();
             $memoizedProvider = CredentialProvider::memoize($provider);
-            $config['credentials'] = $memoizedProvider;
+            $credentialsConfig['credentials'] = $memoizedProvider;
         }
 
-        return new SecretsManagerClient($config);
+        return new SecretsManagerClient($credentialsConfig);
     }
 }
