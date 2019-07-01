@@ -41,7 +41,6 @@ class Configuration implements ConfigurationInterface
             ->enumNode('cache')->values(['apcu', 'filesystem', 'array'])->defaultValue('array')->end()
             ->scalarNode('ttl')->defaultValue(60)->end()
             ->scalarNode('delimiter')->defaultValue(',')->end()
-            ->scalarNode('default_credentials_provider_chain_enabled')->defaultFalse()->end()
             ->scalarNode('ignore')->defaultFalse()->end();
 
         return $treeBuilder;
