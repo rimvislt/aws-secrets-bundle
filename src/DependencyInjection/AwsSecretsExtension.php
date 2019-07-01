@@ -49,10 +49,6 @@ class AwsSecretsExtension extends Extension
             unset($configs['client_config']['credentials']);
         }
 
-        if (!$configs['client_config']['credentials']['key'] || !$configs['client_config']['credentials']['secret']) {
-            unset($configs['client_config']['credentials']);
-        }
-
         $container->register('aws_secrets.secrets_manager_client', SecretsManagerClient::class)
             ->setLazy(true)
             ->addArgument($configs['client_config'])
