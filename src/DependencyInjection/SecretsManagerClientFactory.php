@@ -8,14 +8,15 @@ use Aws\SecretsManager\SecretsManagerClient;
 /**
  * Class SecretsManagerClientFactory
  * @package AwsSecretsBundle\DependencyInjection
- * @author  Joe Mizzi <joe@casechek.com>
+ * @author  James Matsumura <james@casechek.com>
  *
  * @codeCoverageIgnore
  */
 class SecretsManagerClientFactory
 {
     /**
-     * @param array $config
+     * @param array $credentialsConfig
+     * @param bool $ecsEnabled
      * @return SecretsManagerClient
      */
     public function createClient(array $credentialsConfig, bool $ecsEnabled): SecretsManagerClient
