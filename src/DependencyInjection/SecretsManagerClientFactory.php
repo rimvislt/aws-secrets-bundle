@@ -2,7 +2,6 @@
 
 namespace AwsSecretsBundle\DependencyInjection;
 
-use Aws\Credentials\CredentialProvider;
 use Aws\SecretsManager\SecretsManagerClient;
 
 /**
@@ -15,23 +14,31 @@ use Aws\SecretsManager\SecretsManagerClient;
 class SecretsManagerClientFactory
 {
     /**
-     * @param array $credentialsConfig
-     * @param bool $ecsEnabled
+     * @param string $region
+     * @param null|string $key
+     * @param null|string $secret
+     * @param null|string $version
      * @return SecretsManagerClient
      */
-    public function createClient(array $credentialsConfig, bool $ecsEnabled): SecretsManagerClient
+    public function createClient(
+        string $region,
+        string $version,
+        ?string $key,
+        ?string $secret
+    ): SecretsManagerClient
     {
-        if (!$ecsEnabled) {
-            unset(
-                $credentialsConfig['credentials']['key'],
-                $credentialsConfig['credentials']['secret']
-            );
-        } else {
-            $provider = CredentialProvider::ecsCredentials();
-            $memoizedProvider = CredentialProvider::memoize($provider);
-            $credentialsConfig['credentials'] = $memoizedProvider;
+        $config = [
+            'region' => $region,
+            'version' => $version
+        ];
+
+        if ($key && $secret) {
+            $config['credentials'] = [
+                'key' => $key,
+                'secret' => $secret
+            ];
         }
 
-        return new SecretsManagerClient($credentialsConfig);
+        return new SecretsManagerClient($config);
     }
 }

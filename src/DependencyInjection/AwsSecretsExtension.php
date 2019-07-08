@@ -41,8 +41,10 @@ class AwsSecretsExtension extends Extension
         $container->register('aws_secrets.secrets_manager_client', SecretsManagerClient::class)
             ->setLazy(true)
             ->setPublic(false)
-            ->addArgument($configs['client_config'])
-            ->addArgument($configs['ecs_enabled'])
+            ->addArgument($configs['client_config']['region'])
+            ->addArgument($configs['client_config']['version'])
+            ->addArgument($configs['client_config']['credentials']['key'])
+            ->addArgument($configs['client_config']['credentials']['secret'])
             ->setFactory([SecretsManagerClientFactory::class, 'createClient']);
 
         $container->setAlias('aws_secrets.client', 'aws_secrets.secrets_manager_client')
