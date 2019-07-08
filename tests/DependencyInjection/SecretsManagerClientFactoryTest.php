@@ -49,4 +49,17 @@ class SecretsManagerClientFactoryTest extends TestCase
         );
         $this->assertInstanceOf(SecretsManagerClient::class, $client);
     }
+
+    /** @test */
+    public function it_builds_client_with_key_and_secret(): void
+    {
+        $factory = new SecretsManagerClientFactory();
+        $client = $factory->createClient(
+            'region',
+            'latest',
+            'key',
+            'secret'
+        );
+        $this->assertInstanceOf(SecretsManagerClient::class, $client);
+    }
 }
