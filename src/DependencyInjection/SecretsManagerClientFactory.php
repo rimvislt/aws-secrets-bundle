@@ -3,13 +3,12 @@
 namespace AwsSecretsBundle\DependencyInjection;
 
 use Aws\SecretsManager\SecretsManagerClient;
+use Exception;
 
 /**
  * Class SecretsManagerClientFactory
  * @package AwsSecretsBundle\DependencyInjection
  * @author  James Matsumura <james@casechek.com>
- *
- * @codeCoverageIgnore
  */
 class SecretsManagerClientFactory
 {
@@ -19,6 +18,7 @@ class SecretsManagerClientFactory
      * @param null|string $secret
      * @param null|string $version
      * @return SecretsManagerClient
+     * @throws \Exception
      */
     public function createClient(
         string $region,
@@ -37,6 +37,11 @@ class SecretsManagerClientFactory
                 'key' => $key,
                 'secret' => $secret
             ];
+        } else if (
+            ($key && !$secret) ||
+            (!$key && $secret)
+        ) {
+            throw new Exception('Both key and secret must be provided or neither');
         }
 
         return new SecretsManagerClient($config);
