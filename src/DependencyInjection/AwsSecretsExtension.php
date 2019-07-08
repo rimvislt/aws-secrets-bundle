@@ -7,6 +7,7 @@ use AwsSecretsBundle\AwsSecretsEnvVarProcessor;
 use AwsSecretsBundle\Provider\AwsSecretsArrayEnvVarProvider;
 use AwsSecretsBundle\Provider\AwsSecretsCachedEnvVarProvider;
 use AwsSecretsBundle\Provider\AwsSecretsEnvVarProvider;
+use Exception;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -28,6 +29,7 @@ class AwsSecretsExtension extends Extension
      *
      * @param array $configs
      * @param ContainerBuilder $container
+     * @throws Exception
      */
     public function load(array $configs, ContainerBuilder $container): void
     {
@@ -37,6 +39,13 @@ class AwsSecretsExtension extends Extension
         $container->setParameter('aws_secrets.ttl', $configs['ttl']);
         $container->setParameter('aws_secrets.ignore', $configs['ignore']);
         $container->setParameter('aws_secrets.delimiter', $configs['delimiter']);
+
+        $credentials = $configs['client_config']['credentials'];
+        if ($credentials['key'] === null && $credentials['secret'] === null) {
+            unset($configs['client_config']['credentials']);
+        } else if ($credentials['key'] === null || $credentials['secret'] === null) {
+            throw new Exception('Both key and secret must be provided or neither');
+        }
 
         $container->register('aws_secrets.secrets_manager_client', SecretsManagerClient::class)
             ->setLazy(true)
