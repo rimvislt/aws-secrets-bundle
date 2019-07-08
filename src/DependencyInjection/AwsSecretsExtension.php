@@ -40,17 +40,14 @@ class AwsSecretsExtension extends Extension
         $container->setParameter('aws_secrets.ignore', $configs['ignore']);
         $container->setParameter('aws_secrets.delimiter', $configs['delimiter']);
 
-        $credentials = $configs['client_config']['credentials'];
-        if ($credentials['key'] === null && $credentials['secret'] === null) {
-            unset($configs['client_config']['credentials']);
-        } else if ($credentials['key'] === null || $credentials['secret'] === null) {
-            throw new Exception('Both key and secret must be provided or neither');
-        }
-
         $container->register('aws_secrets.secrets_manager_client', SecretsManagerClient::class)
             ->setLazy(true)
-            ->addArgument($configs['client_config'])
-            ->setPublic(false);
+            ->setPublic(false)
+            ->addArgument($configs['client_config']['region'])
+            ->addArgument($configs['client_config']['version'])
+            ->addArgument($configs['client_config']['credentials']['key'])
+            ->addArgument($configs['client_config']['credentials']['secret'])
+            ->setFactory([SecretsManagerClientFactory::class, 'createClient']);
 
         $container->setAlias('aws_secrets.client', 'aws_secrets.secrets_manager_client')
             ->setPublic(true);
