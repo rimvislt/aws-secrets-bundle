@@ -21,8 +21,8 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('aws_secrets');
+        $treeBuilder = new TreeBuilder('aws_secrets');
+        $rootNode =  $treeBuilder->getRootNode();
 
         $rootNode->children()
             ->arrayNode('client_config')
